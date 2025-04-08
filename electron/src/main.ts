@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain} from 'electron';
 import * as path from "path";
 import { omnaiscopeBackendManager } from './omnaiBackend';
 
@@ -22,6 +22,10 @@ const createWindow = (): void => {
 };
 
 omnaiscopeBackendManager.startBackend(); 
+
+ipcMain.handle('get-omnaiscope-backend-port', async () => {
+  return omnaiscopeBackendManager.getPort(); 
+}); 
 
 app.whenReady().then(() => {
   createWindow();
