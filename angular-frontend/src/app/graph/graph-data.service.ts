@@ -3,7 +3,7 @@ import { scaleUtc as d3ScaleUtc, scaleLinear as d3ScaleLinear } from 'd3-scale';
 
 @Injectable()
 export class DataSourceService {
-  private readonly $graphDimensions = signal({ width: 0, height: 0 });
+  private readonly $graphDimensions = signal({ width: 800, height: 600 });
   graphDimensions = this.$graphDimensions.asReadonly();
 
   private readonly $xDomain = signal([new Date(2020), new Date()]);

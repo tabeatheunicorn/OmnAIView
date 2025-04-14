@@ -6,8 +6,10 @@ import { DeviceListComponent } from './omnai-datasource/devicelist.component';
   selector: 'app-root',
   imports: [RouterOutlet, DeviceListComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
+  standalone: true
 })
 export class AppComponent {
   title = 'OmnAIView';
+  
 }

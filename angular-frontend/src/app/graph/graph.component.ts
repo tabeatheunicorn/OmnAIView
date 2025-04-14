@@ -14,7 +14,7 @@ import { select } from 'd3-selection';
 import { DataSourceService } from './graph-data.service';
 import { ResizeObserverDirective } from '../shared/resize-observer.directive';
 import { transition } from 'd3';
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-graph',
@@ -22,8 +22,7 @@ import { isPlatformBrowser } from '@angular/common';
   templateUrl: './graph.component.html',
   providers: [DataSourceService],
   styleUrls: ['./graph.component.css'],
-  imports: [ResizeObserverDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  imports: [ResizeObserverDirective, JsonPipe],
 })
 export class GraphComponent {
   readonly dataservice = inject(DataSourceService);
@@ -53,16 +52,12 @@ export class GraphComponent {
   })
 
   xAxisTransformString = computed(() => {
-    const { width, height } = this.dataservice.graphDimensions();
     const yScale = this.dataservice.yScale();
-
     return `translate(0, ${yScale.range()[0]})`; // for d3, (0,0) is the upper left hand corner. When looking at data, the lower left hand corner is (0,0)
   });
 
   yAxisTransformString = computed(() => {
-    const { width, height } = this.dataservice.graphDimensions();
     const xScale = this.dataservice.xScale();
-
     return `translate(${xScale.range()[0]}, 0)`;
   });
 

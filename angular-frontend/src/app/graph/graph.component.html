@@ -12,10 +12,41 @@
     </g>
 </svg>
 <div>
-    {{dataservice.xScale().domain()}}
-    {{dataservice.xScale().range()}}
-    {{dataservice.yScale().domain()}}
-    {{dataservice.yScale().range()}}
-    {{xAxisTransformString()}}
-    {{yAxisTransformString()}}
+    <h4>Debug Output</h4>
+
+    <div>
+        <strong>X Scale Domain:</strong>
+        <pre>{{ dataservice.xScale().domain() | json }}</pre>
+    </div>
+
+    <div>
+        <strong>X Scale Range:</strong>
+        <pre>{{ dataservice.xScale().range() | json }}</pre>
+    </div>
+
+    <div>
+        <strong>Y Scale Domain:</strong>
+        <pre>{{ dataservice.yScale().domain() | json }}</pre>
+    </div>
+
+    <div>
+        <strong>Y Scale Range:</strong>
+        <pre>{{ dataservice.yScale().range() | json }}</pre>
+    </div>
+
+    <div>
+        <strong>X Axis Transform:</strong>
+        <pre>{{ xAxisTransformString() }}</pre>
+    </div>
+
+    <div>
+        <strong>Y Axis Transform:</strong>
+        <pre>{{ yAxisTransformString() }}</pre>
+    </div>
+
+    <div>
+        <strong>Graph Dimensions:</strong>
+        <pre>{{ dataservice.graphDimensions() | json }}</pre>
+    </div>
+
 </div>
