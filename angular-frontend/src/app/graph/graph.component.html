@@ -1,16 +1,22 @@
 <svg #graphContainer appResizeObserver (resize)="updateGraphDimensions($event)">
     <g [attr.transform]="marginTransform()">
-        
-    <g #xAxis [attr.transform]="xAxisTransformString()"></g>
-    <g #yAxis [attr.transform]="yAxisTransformString()"></g>
+
+        <g #xAxis [attr.transform]="xAxisTransformString()">
+
+        </g>
+        <g #yAxis [attr.transform]="yAxisTransformString()"></g>
+        @for (path of dataservice.paths(); track $index) {
+        <path [attr.d]="path.d" fill="none" stroke="steelblue" stroke-width="2" />
+        }
+
     </g>
 </svg>
 
 <div>
-{{dataservice.xScale().domain()}}
-{{dataservice.xScale().range()}}
-{{dataservice.yScale().domain()}}
-{{dataservice.yScale().range()}}
-{{xAxisTransformString()}}
-{{yAxisTransformString()}}
+    {{dataservice.xScale().domain()}}
+    {{dataservice.xScale().range()}}
+    {{dataservice.yScale().domain()}}
+    {{dataservice.yScale().range()}}
+    {{xAxisTransformString()}}
+    {{yAxisTransformString()}}
 </div>
