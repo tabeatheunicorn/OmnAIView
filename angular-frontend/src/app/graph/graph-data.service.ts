@@ -12,8 +12,8 @@ import { scaleUtc as d3ScaleUtc, scaleLinear as d3ScaleLinear } from 'd3-scale';
 @Injectable()
 export class DataSourceService {
 
-  xAxis = signal(d3ScaleUtc())
-  yAxis = signal(d3ScaleLinear())
+  xScale = signal(d3ScaleUtc().domain([new Date(2020), new Date()]))
+  yScale = signal(d3ScaleLinear())
 
 
 }
