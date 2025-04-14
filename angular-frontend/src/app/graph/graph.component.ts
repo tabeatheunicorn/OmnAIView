@@ -83,7 +83,7 @@ export class GraphComponent {
     // TODO this should redirect somewhere where the user cann select datasources
     this.livedata.connect();
     const timeslcie = this.livedata.getLast30MinutesRange();
-    this.livedata.getDownsampledInRange(timeslcie.tmin, timeslcie.tmax, 1000)
+    this.livedata.getDownsampledInRange(timeslcie.tmin, timeslcie.tmax, 1000);
 
   }
 }

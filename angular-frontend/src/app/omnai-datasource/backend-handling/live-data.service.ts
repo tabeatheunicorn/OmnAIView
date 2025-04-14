@@ -1,7 +1,7 @@
 import { computed, Injectable, signal } from '@angular/core';
 
 type TimeValuePair = [string, number];
-type DownsampledData = TimeValuePair[][];
+export type DownsampledData = TimeValuePair[][];
 
 const MAX_ENTRIES = 1_000;
 
@@ -17,40 +17,46 @@ export class LiveDataService {
    */
   private readonly _dataSignal = signal<DownsampledData>([]);
 
-  readonly dataSignal  = this._dataSignal.asReadonly();
+  readonly dataSignal = this._dataSignal.asReadonly();
 
   /**
    * Establishes a WebSocket connection to the live data endpoint.
    */
   connect(): void {
     this.disconnect();
-    this.ws = new WebSocket('ws://localhost:8080/data');
+    this.ws = new WebSocket('ws://localhost:8080/ws');
 
     this.ws.onmessage = (event) => {
-      const msg = JSON.parse(event.data);
+      try {
+        const msg = JSON.parse(event.data);
 
-      if (msg?.meta?.responce_to === 'get_downsampled_in_range') {
-        const incoming = msg.data as DownsampledData;
+        if (msg?.meta?.responce_to === 'get_downsampled_in_range') {
+          const incoming = msg.data as DownsampledData;
 
-        this._dataSignal.update((current) => {
-          // Merge incoming data into existing series
-          const merged = current.map((series, i) => {
-            const incomingSeries = incoming[i] ?? [];
-            const combined = [...series, ...incomingSeries];
+          console.log("received", incoming)
+          this._dataSignal.update((current) => {
+            // Merge incoming data into existing series
+            const merged = current.map((series, i) => {
+              const incomingSeries = incoming[i] ?? [];
+              const combined = [...series, ...incomingSeries];
 
-            // Ensure we keep only the latest MAX_ENTRIES
-            return combined.slice(-MAX_ENTRIES);
-          });
+              // Ensure we keep only the latest MAX_ENTRIES
+              return combined.slice(-MAX_ENTRIES);
+            });
 
-          // Handle case where incoming has more series than current
-          if (incoming.length > current.length) {
-            for (let i = current.length; i < incoming.length; i++) {
-              merged.push(incoming[i].slice(-MAX_ENTRIES));
+            // Handle case where incoming has more series than current
+            if (incoming.length > current.length) {
+              for (let i = current.length; i < incoming.length; i++) {
+                merged.push(incoming[i].slice(-MAX_ENTRIES));
+              }
             }
-          }
 
-          return merged;
-        });
+            return merged;
+          });
+        }
+      } catch (error) {
+        // Ignore invalid or non-parsable messages
+        console.warn('Ignoring invalid message:', event.data);
       }
     };
 
@@ -61,27 +67,40 @@ export class LiveDataService {
     this.ws.onclose = () => {
       console.warn('WebSocket closed');
     };
-  }
+  };
 
-  /**
-   * Sends a `get_downsampled_in_range` command via WebSocket
-   * to request downsampled data within a given time window.
-   *
-   * @param tmin ISO8601 timestamp (start time)
-   * @param tmax ISO8601 timestamp (end time)
-   * @param desiredNumberOfSamples preferred sample count
-   */
   getDownsampledInRange(
     tmin: string,
     tmax: string,
     desiredNumberOfSamples: number
   ): void {
+    // Warten auf den WebSocket, wenn er nicht offen ist
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
       console.error('WebSocket is not open');
-      return;
+      this.waitForWebSocket().then(() => {
+        // Sobald der WebSocket offen ist, senden wir die Nachricht
+        this.sendMessage(tmin, tmax, desiredNumberOfSamples);
+      });
+    } else {
+      // WebSocket ist bereits offen, Nachricht sofort senden
+      this.sendMessage(tmin, tmax, desiredNumberOfSamples);
     }
+  }
 
-    this._dataSignal.set([]); // new request for data means that we discard the old
+  /**
+   * Sendet die Nachricht an den WebSocket.
+   * @param tmin Startzeitpunkt
+   * @param tmax Endzeitpunkt
+   * @param desiredNumberOfSamples gewünschte Anzahl der Samples
+   */
+  private sendMessage(
+    tmin: string,
+    tmax: string,
+    desiredNumberOfSamples: number
+  ): void {
+    // Setzt das Signal auf einen leeren Zustand, um die vorherigen Daten zu verwerfen
+    this._dataSignal.set([]);
+
     const message = {
       command: 'get_downsampled_in_range',
       tmin,
@@ -89,8 +108,26 @@ export class LiveDataService {
       desired_number_of_samples: desiredNumberOfSamples,
     };
 
-    this.ws.send(JSON.stringify(message));
+    // Senden der Nachricht an den WebSocket
+    this.ws?.send(JSON.stringify(message));
   }
+
+  /**
+   * Wartet darauf, dass der WebSocket geöffnet wird (readyState === WebSocket.OPEN).
+   */
+  private async waitForWebSocket(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      const interval = setInterval(() => {
+        if (this.ws?.readyState === WebSocket.OPEN) {
+          clearInterval(interval);
+          resolve();
+        }
+      }, 100);
+    });
+  }
+
+
+
   /**
   * Returns an object with `tmin` and `tmax` representing
   * the last 30 minutes in ISO 8601 UTC format.
