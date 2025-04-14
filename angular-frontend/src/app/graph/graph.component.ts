@@ -9,6 +9,8 @@ import {
 import { axisBottom } from 'd3-axis';
 import { select } from 'd3-selection';
 import { DataSourceService } from './graph-data.service';
+import { ResizeObserverDirective } from '../shared/resize-observer.directive';
+import { transition } from 'd3';
 
 @Component({
   selector: 'app-graph',
@@ -16,7 +18,7 @@ import { DataSourceService } from './graph-data.service';
   templateUrl: './graph.component.html',
   providers: [DataSourceService],
   styleUrls: ['./graph.component.css'],
-  imports: [],
+  imports: [ResizeObserverDirective],
 })
 export class GraphComponent {
   readonly dataservice = inject(DataSourceService);
@@ -33,18 +35,14 @@ export class GraphComponent {
       }
     });
 
-    effect(() => {
-      const { width } = this.graphDimensions();
-      if (width === 0) return;
-
-      const x = this.dataservice.xScale().range([40, width - 30]);
-      const g = this.axesContainer().nativeElement;
-      select(g).call(axisBottom(x));
-    });
-
-    setTimeout(() => {
-      const current = this.graphDimensions();
-      this.graphDimensions.set({ width: current.width / 2, height: current.height });
-    }, 10_000);
   }
+
+  updateXAxisInCanvas = effect(() => {
+    const { width } = this.graphDimensions();
+    if (width === 0) return;
+
+    const x = this.dataservice.xScale().range([40, width - 30]);
+    const g = this.axesContainer().nativeElement;
+    select(g).transition(transition()).duration(300).call(axisBottom(x));
+  });
 }
