@@ -15,6 +15,7 @@ import { DataSourceService } from './graph-data.service';
 import { ResizeObserverDirective } from '../shared/resize-observer.directive';
 import { transition } from 'd3';
 import { isPlatformBrowser, JsonPipe } from '@angular/common';
+import { LiveDataService } from '../omnai-datasource/backend-handling/live-data.service';
 
 @Component({
   selector: 'app-graph',
@@ -23,6 +24,7 @@ import { isPlatformBrowser, JsonPipe } from '@angular/common';
   providers: [DataSourceService],
   styleUrls: ['./graph.component.css'],
   imports: [ResizeObserverDirective, JsonPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GraphComponent {
   readonly dataservice = inject(DataSourceService);
@@ -75,4 +77,13 @@ export class GraphComponent {
     const g = this.axesYContainer().nativeElement;
     select(g).transition(transition()).duration(300).call(axisLeft(y));
   });
+
+  private readonly livedata = inject(LiveDataService);
+  startData(){
+    // TODO this should redirect somewhere where the user cann select datasources
+    this.livedata.connect();
+    const timeslcie = this.livedata.getLast30MinutesRange();
+    this.livedata.getDownsampledInRange(timeslcie.tmin, timeslcie.tmax, 1000)
+
+  }
 }

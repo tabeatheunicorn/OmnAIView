@@ -1,5 +1,6 @@
-import { Injectable, signal, linkedSignal } from '@angular/core';
+import { Injectable, signal, linkedSignal, inject } from '@angular/core';
 import { scaleUtc as d3ScaleUtc, scaleLinear as d3ScaleLinear } from 'd3-scale'; import { line as d3Line } from 'd3-shape';
+import { LiveDataService } from '../omnai-datasource/backend-handling/live-data.service';
 
 @Injectable()
 export class DataSourceService {
@@ -48,22 +49,7 @@ export class DataSourceService {
     }
   }
 
-  readonly dummySeries = signal([
-    {
-      id: 'Kanal A',
-      values: Array.from({ length: 20 }, (_, i) => ({
-        time: new Date(2020, 0, i + 1),
-        value: Math.random() * 100,
-      })),
-    },
-    {
-      id: 'Kanal B',
-      values: Array.from({ length: 20 }, (_, i) => ({
-        time: new Date(2000+i, 0, i + 1),
-        value: Math.random() * 100,
-      })),
-    },
-  ]);
+  readonly dummySeries = inject(LiveDataService).dataSignal
 
   readonly paths = linkedSignal({
     source: () => ({
@@ -76,11 +62,19 @@ export class DataSourceService {
         .x(d => xScale(d.time))
         .y(d => yScale(d.value));
 
-      return series.map(s => ({
-        id: s.id,
-        d: lineGen(s.values),
-      }));
+      return series.map((s, i) => {
+        const parsedValues = s.map(([timestamp, value]) => ({
+          time: new Date(timestamp),
+          value,
+        }));
+
+        return {
+          id: `series-${i}`,
+          d: lineGen(parsedValues) ?? '', // fallback für leere Kurve
+        };
+      });
     },
   });
+
 
 }
