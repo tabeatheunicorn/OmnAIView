@@ -1,35 +1,32 @@
 // src/app/components/device-list/device-list.component.ts
-import { Component, OnInit, Inject } from '@angular/core';
-import { BackendAPIService } from '../backend-handling/backend-api.service';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, Inject, PLATFORM_ID, signal } from '@angular/core';
 import { DeviceListResponse } from '../../models/device.model';
-import { CommonModule, NgIf } from '@angular/common';
-import { isPlatformBrowser } from '@angular/common';
-import { PLATFORM_ID } from '@angular/core';
+import { OmnAIScopeAPIService } from './backend-handling/backend-api.service';
 
 @Component({
     selector: 'app-device-list',
     templateUrl: './devicelist.component.html',
     imports: [CommonModule],
-    standalone: true
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeviceListComponent {
-    deviceListResponse: DeviceListResponse | null = null;
-    errorMessage: string | null = null;
+    deviceListResponse = signal<DeviceListResponse | null>(null);
+    errorMessage = signal<string | null>(null);
 
-    constructor(private backendApiService: BackendAPIService,
-        @Inject(PLATFORM_ID) private platformId: Object
-    ) { }
+    private readonly backendApiService = inject(OmnAIScopeAPIService);
+    private readonly platformID = inject(PLATFORM_ID);
 
     getDevicesList(): void {
-        if (isPlatformBrowser(this.platformId)) { // check if angular already runs in browser so a window is available 
+        if (isPlatformBrowser(this.platformID)) { // check if angular already runs in browser so a window is available 
             this.backendApiService.getDevices().subscribe({
                 next: (data: DeviceListResponse) => {
-                    this.deviceListResponse = data;
+                    this.deviceListResponse.set(data);
                     console.log('Devices List:', data);
                 },
                 error: (error: any) => {
                     console.error('Error Loading the devices:', error);
-                    this.errorMessage = `Error: ${error.message}`;
+                    this.errorMessage.set(`Error: ${error.message}`);
                 }
             });
         } else {

@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 @Injectable({
     providedIn: 'root'
 })
-export class BackendPortService {
+export class OmnAIScopePortService {
     async loadOmnAIScopeBackendPort(): Promise<number> {
         if (window.electronAPI) { // only works with angular combined with the correct electron app 
             try {

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { DeviceListComponent } from './device-handling/devicelist.component';
+import { DeviceListComponent } from './omnai-datasource/devicelist.component';
 
 @Component({
   selector: 'app-root',
