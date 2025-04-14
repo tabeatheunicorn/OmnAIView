@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { GraphDataService } from './graph-data.service';
+import { DataSourceService } from './graph-data.service';
 
 @Component({
   selector: 'app-graph',
   imports: [],
   templateUrl: './graph.component.html',
-  providers: [GraphDataService]
+  providers: [DataSourceService]
 })
 export class GraphComponent {
-  readonly #dataservice = inject(GraphDataService);
+  readonly #dataservice = inject(DataSourceService);
 }
