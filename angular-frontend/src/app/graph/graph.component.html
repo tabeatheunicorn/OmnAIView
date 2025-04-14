@@ -1,3 +1,16 @@
-<svg #graphContainer appResizeObserver (resize)="graphDimensions.set($event)">
-    <g #xAxes></g>
+<svg #graphContainer appResizeObserver (resize)="updateGraphDimensions($event)">
+    <g [attr.transform]="marginTransform()">
+        
+    <g #xAxis [attr.transform]="xAxisTransformString()"></g>
+    <g #yAxis [attr.transform]="yAxisTransformString()"></g>
+    </g>
 </svg>
+
+<div>
+{{dataservice.xScale().domain()}}
+{{dataservice.xScale().range()}}
+{{dataservice.yScale().domain()}}
+{{dataservice.yScale().range()}}
+{{xAxisTransformString()}}
+{{yAxisTransformString()}}
+</div>

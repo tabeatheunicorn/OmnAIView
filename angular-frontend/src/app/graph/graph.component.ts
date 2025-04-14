@@ -5,8 +5,9 @@ import {
   effect,
   viewChild,
   type ElementRef,
+  computed,
 } from '@angular/core';
-import { axisBottom } from 'd3-axis';
+import { axisBottom, axisLeft } from 'd3-axis';
 import { select } from 'd3-selection';
 import { DataSourceService } from './graph-data.service';
 import { ResizeObserverDirective } from '../shared/resize-observer.directive';
@@ -23,26 +24,51 @@ import { transition } from 'd3';
 export class GraphComponent {
   readonly dataservice = inject(DataSourceService);
   readonly svgGraph = viewChild.required<ElementRef<SVGElement>>('graphContainer');
-  readonly axesContainer = viewChild.required<ElementRef<SVGGElement>>('xAxes');
+  readonly axesContainer = viewChild.required<ElementRef<SVGGElement>>('xAxis');
+  readonly axesYContainer = viewChild.required<ElementRef<SVGGElement>>('yAxis');
 
-  readonly graphDimensions = signal({ width: 0, height: 0 });
 
   constructor() {
     queueMicrotask(() => {
-      const rect = this.svgGraph().nativeElement.getBoundingClientRect();
-      if (rect.width > 0 && rect.height > 0) {
-        this.graphDimensions.set({ width: rect.width, height: rect.height });
+      const rect = this.svgGraph().nativeElement.getBoundingClientRect(); if (rect.width > 0 && rect.height > 0) {
+        this.dataservice.updateGraphDimensions({ width: rect.width, height: rect.height });
       }
     });
 
   }
 
-  updateXAxisInCanvas = effect(() => {
-    const { width } = this.graphDimensions();
-    if (width === 0) return;
+  updateGraphDimensions(dimension: { width: number, height: number }) {
+    this.dataservice.updateGraphDimensions(dimension)
+  }
 
-    const x = this.dataservice.xScale().range([40, width - 30]);
+  marginTransform = computed(() => {
+    return `translate(${this.dataservice.margin.left}, ${this.dataservice.margin.top})`
+  })
+
+  xAxisTransformString = computed(() => {
+    const { width, height } = this.dataservice.graphDimensions();
+    const yScale = this.dataservice.yScale();
+
+    return `translate(0, ${yScale.range()[0]})`; // for d3, (0,0) is the upper left hand corner. When looking at data, the lower left hand corner is (0,0)
+  });
+
+  yAxisTransformString = computed(() => {
+    const { width, height } = this.dataservice.graphDimensions();
+    const xScale = this.dataservice.xScale();
+
+    return `translate(${xScale.range()[0]}, 0)`;
+  });
+
+
+  updateXAxisInCanvas = effect(() => {
+    const x = this.dataservice.xScale()
     const g = this.axesContainer().nativeElement;
     select(g).transition(transition()).duration(300).call(axisBottom(x));
+  });
+
+  updateYAxisInCanvas = effect(() => {
+    const y = this.dataservice.yScale();
+    const g = this.axesYContainer().nativeElement;
+    select(g).transition(transition()).duration(300).call(axisLeft(y));
   });
 }
