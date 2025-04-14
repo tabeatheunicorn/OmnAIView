@@ -1,3 +1,4 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
     Directive,
     ElementRef,
@@ -6,6 +7,7 @@ import {
     inject,
     AfterViewInit,
     DestroyRef,
+    PLATFORM_ID,
 } from '@angular/core';
 
 @Directive({
@@ -17,8 +19,12 @@ export class ResizeObserverDirective implements AfterViewInit {
 
     private readonly element = inject(ElementRef<HTMLElement>);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly platform = inject(PLATFORM_ID);
 
+    isInBrowser = isPlatformBrowser(this.platform);
+    
     ngAfterViewInit(): void {
+        if (!this.isInBrowser) return;
         const observer = this.createResizeObserver();
         this.startObserving(observer);
         this.cleanupOnDestroy(observer);
