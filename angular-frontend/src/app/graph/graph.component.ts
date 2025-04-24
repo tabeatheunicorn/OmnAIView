@@ -1,21 +1,20 @@
+import { isPlatformBrowser, JsonPipe } from '@angular/common';
 import {
-  Component,
-  inject,
-  signal,
-  effect,
-  viewChild,
-  type ElementRef,
-  computed,
   ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
   PLATFORM_ID,
+  viewChild,
+  type ElementRef
 } from '@angular/core';
+import { transition } from 'd3';
 import { axisBottom, axisLeft } from 'd3-axis';
 import { select } from 'd3-selection';
-import { DataSourceService } from './graph-data.service';
 import { ResizeObserverDirective } from '../shared/resize-observer.directive';
-import { transition } from 'd3';
-import { isPlatformBrowser, JsonPipe } from '@angular/common';
-import { LiveDataService } from '../omnai-datasource/backend-handling/live-data.service';
+import { StartDataButtonComponent } from "../source-selection/start-data-from-source.component";
+import { DataSourceService } from './graph-data.service';
 
 @Component({
   selector: 'app-graph',
@@ -23,7 +22,7 @@ import { LiveDataService } from '../omnai-datasource/backend-handling/live-data.
   templateUrl: './graph.component.html',
   providers: [DataSourceService],
   styleUrls: ['./graph.component.css'],
-  imports: [ResizeObserverDirective, JsonPipe],
+  imports: [ResizeObserverDirective, JsonPipe, StartDataButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GraphComponent {
@@ -78,12 +77,4 @@ export class GraphComponent {
     select(g).transition(transition()).duration(300).call(axisLeft(y));
   });
 
-  private readonly livedata = inject(LiveDataService);
-  startData(){
-    // TODO this should redirect somewhere where the user cann select datasources
-    this.livedata.connect();
-    const timeslcie = this.livedata.getLast30MinutesRange();
-    this.livedata.getDownsampledInRange(timeslcie.tmin, timeslcie.tmax, 1000);
-
-  }
 }
