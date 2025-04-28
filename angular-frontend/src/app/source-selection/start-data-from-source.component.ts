@@ -24,7 +24,7 @@ export class StartDataButtonComponent {
         dialogRef.afterClosed().subscribe(() => {
             if (this.datasource.hasSelection()) {
                 // This should always be true as hasSelection is true when current Source is set
-                this.datasource.currentSource()?.start();
+                this.datasource.currentSource()?.connect();
             }
         });
     }

@@ -1,8 +1,9 @@
-import { effect, inject, Injectable, linkedSignal, signal, untracked } from '@angular/core';
+import { computed, effect, inject, Injectable, linkedSignal, signal, untracked } from '@angular/core';
 import { scaleLinear as d3ScaleLinear, scaleUtc as d3ScaleUtc } from 'd3-scale';
 import { line as d3Line } from 'd3-shape';
 import {  OmnAIScopeDataService } from '../omnai-datasource/omnai-scope-server/live-data.service';
 import { type GraphComponent } from './graph.component';
+import { DataSourceSelectionService } from '../source-selection/data-source-selection.service';
 
 type UnwrapSignal<T> = T extends import('@angular/core').Signal<infer U> ? U : never;
 
@@ -14,8 +15,14 @@ export class DataSourceService {
   private readonly $graphDimensions = signal({ width: 800, height: 600 });
   private readonly $xDomain = signal([new Date(2020), new Date()]);
   private readonly $yDomain = signal([0, 100]);
-  // This is the currently selected datasource to be displayed 
-  private readonly dummySeries = inject(OmnAIScopeDataService).data;
+  private readonly dataSourceSelectionService = inject(DataSourceSelectionService);
+
+  private readonly dummySeries = computed(() => {
+    const selectedSource = this.dataSourceSelectionService.currentSource();
+    if (!selectedSource) return {};
+
+    return selectedSource.data();
+  });
 
 
   readonly margin = { top: 20, right: 30, bottom: 40, left: 60 };
@@ -59,12 +66,13 @@ export class DataSourceService {
     }
   }
 
-  private readonly updateScalesWhenDataChanges = effect(() => {
+ updateScalesWhenDataChanges = effect(() => {
     const data = this.dummySeries();
     untracked(() => this.scaleAxisToData(data))
   })
 
   private scaleAxisToData(data: UnwrapSignal<typeof this.dummySeries>) {
+    console.log(data)
     if (Object.keys(data).length === 0) return;
 
     const expandBy = 0.1;
@@ -76,14 +84,14 @@ export class DataSourceService {
       maxValue: Number.NEGATIVE_INFINITY
     };
 
-    const result = Object.values(data).reduce((acc, deviceData) => {
-      return deviceData.reduce((innerAcc, point) => ({
-        minTimestamp: Math.min(innerAcc.minTimestamp, point.timestamp),
-        maxTimestamp: Math.max(innerAcc.maxTimestamp, point.timestamp),
-        minValue: Math.min(innerAcc.minValue, point.value),
-        maxValue: Math.max(innerAcc.maxValue, point.value),
-      }), acc);
-    }, initial);
+    const allPoints = Object.values(data).flat(); // DataFormat[]
+
+    const result = allPoints.reduce((acc, point) => ({
+      minTimestamp: Math.min(acc.minTimestamp, point.timestamp),
+      maxTimestamp: Math.max(acc.maxTimestamp, point.timestamp),
+      minValue: Math.min(acc.minValue, point.value),
+      maxValue: Math.max(acc.maxValue, point.value),
+    }), initial);
 
     if (!isFinite(result.minTimestamp) || !isFinite(result.minValue)) return;
 

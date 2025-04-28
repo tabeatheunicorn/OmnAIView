@@ -1,13 +1,14 @@
 // server-communication.service.ts
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
+import { DataSource } from '../../source-selection/data-source-selection.service';
 
 interface DeviceInformation {
   UUID: string;
   color: { r: number; g: number; b: number };
 }
 
-interface DataFormat {
+export interface DataFormat {
   timestamp: number;
   value: number;
 }
@@ -24,7 +25,7 @@ interface DeviceOverview {
 @Injectable({
   providedIn: 'root'
 })
-export class OmnAIScopeDataService {
+export class OmnAIScopeDataService implements DataSource{
   private serverUrl = '127.0.0.1:8080';
   private socket: WebSocket | null = null;
 
@@ -80,7 +81,7 @@ export class OmnAIScopeDataService {
 
       // Send start message
       const deviceUuids = this.devices().map(device => device.UUID).join(" ");
-      this.socket?.send(deviceUuids);
+      this.socket?.send(JSON.stringify(deviceUuids));
     });
 
     let ignoreCounter = 0;
