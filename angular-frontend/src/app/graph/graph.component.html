@@ -8,12 +8,10 @@
         @for (path of dataservice.paths(); track $index) {
         <path [attr.d]="path.d" fill="none" stroke="steelblue" stroke-width="2" />
         }
-        <circle ></circle>
-
-
     </g>
 </svg>
 <app-start-data-button />
+<app-device-list />
 
 <div style="display: none;">
     <h4>Debug Output</h4>

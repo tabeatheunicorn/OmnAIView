@@ -1,15 +1,25 @@
-import { Injectable, signal, linkedSignal, inject, effect, untracked } from '@angular/core';
-import { scaleUtc as d3ScaleUtc, scaleLinear as d3ScaleLinear } from 'd3-scale'; import { line as d3Line } from 'd3-shape';
-import { DownsampledData, LiveDataService } from '../omnai-datasource/backend-handling/live-data.service';
+import { effect, inject, Injectable, linkedSignal, signal, untracked } from '@angular/core';
+import { scaleLinear as d3ScaleLinear, scaleUtc as d3ScaleUtc } from 'd3-scale';
+import { line as d3Line } from 'd3-shape';
+import {  OmnAIScopeDataService } from '../omnai-datasource/omnai-scope-server/live-data.service';
+import { type GraphComponent } from './graph.component';
 
+type UnwrapSignal<T> = T extends import('@angular/core').Signal<infer U> ? U : never;
+
+/**
+ * Provide the data to be displayed in the {@link GraphComponent}
+ */
 @Injectable()
 export class DataSourceService {
   private readonly $graphDimensions = signal({ width: 800, height: 600 });
-  graphDimensions = this.$graphDimensions.asReadonly();
-
   private readonly $xDomain = signal([new Date(2020), new Date()]);
   private readonly $yDomain = signal([0, 100]);
+  // This is the currently selected datasource to be displayed 
+  private readonly dummySeries = inject(OmnAIScopeDataService).data;
+
+
   readonly margin = { top: 20, right: 30, bottom: 40, left: 60 };
+  graphDimensions = this.$graphDimensions.asReadonly();
 
   xScale = linkedSignal({
     source: () => ({
@@ -49,41 +59,48 @@ export class DataSourceService {
     }
   }
 
-  readonly dummySeries = inject(LiveDataService).dataSignal
-
-  updateScalesWhenDataChanges = effect(() => {
+  private readonly updateScalesWhenDataChanges = effect(() => {
     const data = this.dummySeries();
     untracked(() => this.scaleAxisToData(data))
   })
 
-  scaleAxisToData(data: DownsampledData) {
-    // 10% expansion factor in both directions
-    const expandBy = 0.1; // 10% expansion
+  private scaleAxisToData(data: UnwrapSignal<typeof this.dummySeries>) {
+    if (Object.keys(data).length === 0) return;
 
-    // Find the min and max timestamp for xDomain
-    const xMin = Math.min(...data.flatMap(series => series.map(([timestamp]) => new Date(timestamp).getTime())));
-    const xMax = Math.max(...data.flatMap(series => series.map(([timestamp]) => new Date(timestamp).getTime())));
+    const expandBy = 0.1;
 
-    // Expand xDomain by 10% on both sides
-    const xDomainRange = xMax - xMin;
+    const initial = {
+      minTimestamp: Number.POSITIVE_INFINITY,
+      maxTimestamp: Number.NEGATIVE_INFINITY,
+      minValue: Number.POSITIVE_INFINITY,
+      maxValue: Number.NEGATIVE_INFINITY
+    };
+
+    const result = Object.values(data).reduce((acc, deviceData) => {
+      return deviceData.reduce((innerAcc, point) => ({
+        minTimestamp: Math.min(innerAcc.minTimestamp, point.timestamp),
+        maxTimestamp: Math.max(innerAcc.maxTimestamp, point.timestamp),
+        minValue: Math.min(innerAcc.minValue, point.value),
+        maxValue: Math.max(innerAcc.maxValue, point.value),
+      }), acc);
+    }, initial);
+
+    if (!isFinite(result.minTimestamp) || !isFinite(result.minValue)) return;
+
+    const xDomainRange = result.maxTimestamp - result.minTimestamp;
     const xExpansion = xDomainRange * expandBy;
 
     this.$xDomain.set([
-      new Date(xMin - xExpansion), // Expand the left side (min)
-      new Date(xMax + xExpansion), // Expand the right side (max)
+      new Date(result.minTimestamp - xExpansion),
+      new Date(result.maxTimestamp + xExpansion),
     ]);
 
-    // Find the min and max value for yDomain
-    const yMin = Math.min(...data.flatMap(series => series.map(([_timestamp, value]) => value)));
-    const yMax = Math.max(...data.flatMap(series => series.map(([_timestamp, value]) => value)));
-
-    // Expand yDomain by 10% on both sides
-    const yDomainRange = yMax - yMin;
+    const yDomainRange = result.maxValue - result.minValue;
     const yExpansion = yDomainRange * expandBy;
 
     this.$yDomain.set([
-      yMin - yExpansion, // Expand the bottom side (min)
-      yMax + yExpansion, // Expand the top side (max)
+      result.minValue - yExpansion,
+      result.maxValue + yExpansion,
     ]);
   }
 
@@ -98,19 +115,21 @@ export class DataSourceService {
         .x(d => xScale(d.time))
         .y(d => yScale(d.value));
 
-      return series.map((s, i) => {
-        const parsedValues = s.map(([timestamp, value]) => ({
+      return Object.entries(series).map(([key, points]) => {
+        const parsedValues = points.map(({ timestamp, value }) => ({
           time: new Date(timestamp),
           value,
         }));
 
+        const pathData = lineGen(parsedValues) ?? ''; 
         return {
-          id: `series-${i}`,
-          d: lineGen(parsedValues) ?? '', // fallback für leere Kurve
+          id: key,
+          d: pathData,
         };
       });
     },
   });
+
 
 
 }

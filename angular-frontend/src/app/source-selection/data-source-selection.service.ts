@@ -1,5 +1,5 @@
-import { Injectable, signal, computed, inject } from '@angular/core'; import { LiveDataService } from '../omnai-datasource/backend-handling/live-data.service';
-import { OmnAIScopeAPIService } from '../omnai-datasource/backend-handling/backend-api.service';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { OmnAIScopeDataService } from '../omnai-datasource/omnai-scope-server/live-data.service';
 
 
 export interface DataSourceInfo {
@@ -13,7 +13,7 @@ export interface DataSourceInfo {
     providedIn: 'root'
 })
 export class DataSourceSelectionService {
-    private readonly liveDataService = inject(LiveDataService);
+    private readonly liveDataService = inject(OmnAIScopeDataService);
     private readonly _currentSource = signal<DataSourceInfo | null>(null);
 
     private readonly _availableSources = signal<DataSourceInfo[]>([

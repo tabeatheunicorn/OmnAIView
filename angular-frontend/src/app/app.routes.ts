@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { GraphComponent } from './graph/graph.component';
+import { RenderMode } from '@angular/ssr';
 
 export const routes: Routes = [
   {
@@ -7,11 +8,10 @@ export const routes: Routes = [
     children: [
       {
         path: 'main',
-        // loadComponent: () =>
-        //   import('./graph/graph.component').then(m => m.GraphComponent)
-        component: GraphComponent
+        component: GraphComponent,
+        
       }
-    ]
+    ],
   },
   {
   path: '**',
