@@ -1,0 +1,37 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Test",
+  "steps": [
+    {
+      "file": "angular-frontend/package.json",
+      "description": "Hier lässt sich die genutzte Angular Version ablesen, in diesem Fall 19.2.\r\n[Angular API Reference](https://angular.dev/api) enthält eine Übersicht der nutzbaren Schnittstellen.\r\nStand Mai 2025 ist Angular19 die aktuelleste Version",
+      "line": 15
+    },
+    {
+      "file": "angular-frontend/package.json",
+      "description": "d3 ist Library, die als eine Toolbox zum Erstellen von Graphen betrachtet werden kann, [hier gibt es eine Einführung](https://d3js.org/what-is-d3).\r\nAuch wenn wir die komplette Library importiert haben, nutzen wir vor allem die folgenden Aspekte:\r\n[d3-axis](https://d3js.org/d3-axis), [d3-scale](https://d3js.org/d3-scale), sowie die Animationen",
+      "line": 27
+    },
+    {
+      "file": "angular-frontend/angular.json",
+      "description": "Hier ist die Angular Projekt Konfiguration zu finden. Die Dokumentation zu dieser Datei findet sich [hier](https://angular.dev/reference/configs/workspace-config)",
+      "line": 6
+    },
+    {
+      "file": "angular-frontend/tsconfig.json",
+      "description": "Angular ist ein TypeScript Framework. Diese Datei beschreibt die genutzten Kompilationsoptionen, um ausführbare Dateiem zu bekommen. Die statischen Dateien sind dann über einen Websever deploybar",
+      "line": 4
+    },
+    {
+      "file": "angular-frontend/tsconfig.json",
+      "description": "Informationen über den JavaScript Standard und die Art, wie Module geladen werden",
+      "line": 18
+    },
+    {
+      "file": "angular-frontend/tsconfig.json",
+      "description": "Auch wenn hier ein Output directory angegeben ist, wird das durch die Konfiguration in der angular.json Datei überschrieben",
+      "line": 6
+    }
+  ],
+  "ref": "f2457a42251d780ed964792e99212f653469b803"
+}

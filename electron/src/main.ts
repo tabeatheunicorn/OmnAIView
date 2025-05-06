@@ -8,6 +8,9 @@ if (require('electron-squirrel-startup')) {
 }
 
 const createWindow = (): void => {
+
+  const indexPath: string = path.join(__dirname, "..", "res", "angular", "browser", "index.csr.html");
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
@@ -18,9 +21,19 @@ const createWindow = (): void => {
       preload: path.join(__dirname, 'preload.js')
     },
   });
-  const indexPath: string = path.join(__dirname, "..", "res", "angular", "browser", "index.html");
   mainWindow.loadFile(indexPath).catch(err => console.error("Fehler beim Laden der HTML-Datei:", err));
+  const mainWindow2 = new BrowserWindow({
+    height: 800,
+    width: 800,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
+    },
+  });
+  mainWindow2.loadFile(indexPath).catch(err => console.error("Fehler beim Laden der HTML-Datei:", err));
 };
+
 
 omnaiscopeBackendManager.startBackend();
 
@@ -37,6 +50,7 @@ app.whenReady().then(() => {
     }
   });
 });
+
 
 app.on("window-all-closed", () => {
 

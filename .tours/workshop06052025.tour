@@ -1,0 +1,52 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Workshop06052025",
+  "steps": [
+    {
+      "file": "angular-frontend/package-lock.json",
+      "description": "Durch `npm ci`(clean install) werden genau diese Pakete im node_modules Ordner installiert",
+      "line": 1
+    },
+    {
+      "file": "angular-frontend/angular.json",
+      "description": "Beschreibt die erlaubte struktur",
+      "line": 2
+    },
+    {
+      "file": "angular-frontend/angular.json",
+      "description": "Wird in den Selektoren der Komponenten genutzt",
+      "line": 11
+    },
+    {
+      "file": "angular-frontend/angular.json",
+      "description": "Notwendig, um Übersetzungen vorzubereiten",
+      "line": 77
+    },
+    {
+      "file": "angular-frontend/angular.json",
+      "description": "Wo finde ich eigentlich meinen Build Output",
+      "line": 16
+    },
+    {
+      "file": "angular-frontend/package.json",
+      "description": "Was kann ich mit `npm run <script>`.\r\n\r\nPre<scriptname>, post<scripnamte>",
+      "line": 4
+    },
+    {
+      "file": "angular-frontend/package.json",
+      "description": "Relativ bekannte Library, reaktives Programmieren",
+      "line": 30
+    },
+    {
+      "file": "electron/forge.config.ts",
+      "description": "was kommt alles zusätzlich zu der website in die electron app",
+      "line": 12
+    },
+    {
+      "file": "electron/forge.config.ts",
+      "description": "Für welche Betriebssysteme + Prozessorkombinationen gebaut werden kann",
+      "line": 20
+    }
+  ],
+  "ref": "feature/graph-with-zoom-initial"
+}
