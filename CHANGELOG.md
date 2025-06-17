@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Formatting needs to be similar to the dataformat of the old OmnAIView data exports. For more infos, see comments in code.
 - Add axis mode: Allow to switch between absolute and relative x-axis timestamps(#58)
 
+
 ### Changed 
 
 - BREAKING CHANGE: Update OmnAIScope Dataserver from v0.4.0 to v0.5.0
@@ -42,4 +43,6 @@ Formatting needs to be similar to the dataformat of the old OmnAIView data expor
 
 ### Removed 
 
-- Deletetion of deprecated Angular 18 patterns (#18)
+- Deletion of deprecated Angular 18 patterns (#18)
+- Deletion of duplicated AsyncAPI description for OmnAIBackend 
+

@@ -15,6 +15,9 @@ const defaultXDomain: xDomainTuple = [new Date(), new Date(Date.now() - 24 * 60 
 
 /**
  * Provide the data to be displayed in the {@link GraphComponent}
+ * This class also provides the axis descriptions. As these are dependend on the size of the current
+ * graph, this service needs to be provided in any component that creates a graph to ensure that
+ * every graph has its own state management.
  *  */
 @Injectable()
 export class DataSourceService {
