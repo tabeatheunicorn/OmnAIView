@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { ToolbarState, ToolbarStateManagerService } from "./toolbarStateManager.service";
 import { DataSourceSelectionService } from "../source-selection/data-source-selection.service";
@@ -15,6 +15,7 @@ import { MatIconButton } from '@angular/material/button';
         <mat-icon>radio_button_checked</mat-icon>
         </button>
     `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './toolbar.component.css'
 })
 export class RecordDataButtonComponent {

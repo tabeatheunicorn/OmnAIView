@@ -6,18 +6,21 @@ import { HttpClient } from '@angular/common/http';
 describe('RecordingModalComponent', () => {
   let component: RecordingModalComponent;
   let fixture: ComponentFixture<RecordingModalComponent>;
-  const dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
-  let httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
+  const dialogRefSpy = {
+    close: vi.fn().mockName('MatDialogRef.close'),
+  };
+  let httpClientSpy = {
+    get: vi.fn().mockName('HttpClient.get'),
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RecordingModalComponent],
       providers: [
-      { provide: MatDialogRef, useValue: dialogRefSpy },
-      { provide: HttpClient, useValue: httpClientSpy }
-      ]
-    })
-    .compileComponents();
+        { provide: MatDialogRef, useValue: dialogRefSpy },
+        { provide: HttpClient, useValue: httpClientSpy },
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RecordingModalComponent);
     component = fixture.componentInstance;

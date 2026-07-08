@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DataSourceInfo, DataSourceSelectionService } from '../source-selection/data-source-selection.service';
 import { MatDialogContent, MatDialogModule, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-recording-modal',
   imports: [MatDialogContent, MatDialogTitle, MatDialogModule, MatButtonModule, MatInputModule, FormsModule, MatSelectModule, MatIconModule],
   templateUrl: './recording-modal.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './recording-modal.component.css'
 })
 export class RecordingModalComponent {

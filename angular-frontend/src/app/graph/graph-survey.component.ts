@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { GraphCursorDirective } from "../shared/graph-cursor.directive";
 import { DataSourceService } from "./graph-data.service";
 import { input, inject, signal, computed } from "@angular/core";
@@ -21,6 +21,7 @@ import { DecimalPipe } from "@angular/common";
         </p>
         }
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatSlideToggle, DecimalPipe]
 })
 export class GraphSurveyComponent {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { GraphSelectionService } from '../graph-selection.service';
@@ -20,6 +20,7 @@ import { GraphSelectionService } from '../graph-selection.service';
       <mat-icon>crop_free</mat-icon>
     </button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./selection-toggle.component.css']
 })
 export class SelectionToggleComponent {

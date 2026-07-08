@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, ChangeDetectorRef, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectorRef, OnDestroy, Renderer2, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +21,7 @@ import { FontSizeService, FontSizeLevel } from './services/font-size.service';
         MatDividerModule
     ],
     templateUrl: './settings-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./settings-dialog.component.scss']
 })
 export class SettingsDialogComponent implements OnInit, OnDestroy {

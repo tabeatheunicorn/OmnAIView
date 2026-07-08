@@ -1,5 +1,5 @@
-import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
+
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialogModule } from "@angular/material/dialog";
@@ -10,7 +10,8 @@ import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 @Component({
     selector: 'app-devices-settings-dialog',
     templateUrl: './devices-settings-dialog.component.html',
-    imports: [MatDialogModule, MatFormField, MatInputModule, MatButtonModule, CommonModule, FormsModule]
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [MatDialogModule, MatFormField, MatInputModule, MatButtonModule, FormsModule]
 })
 export class DevicesSettingsDialogComponent {
     dialog = inject(MatDialogRef<DevicesSettingsDialogComponent>);

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DataSourceSelectionService } from '../source-selection/data-source-selection.service';
 import { SourceSelectModalComponent } from '../source-selection/source-select-modal.component';
@@ -16,6 +16,7 @@ import { MatIconButton } from '@angular/material/button';
         <mat-icon>{{ (this.toolbarState.getState() === ToolbarState.STARTED ) ? 'stop' : 'play_arrow' }}</mat-icon>
         </button>
     `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './toolbar.component.css',
 })
 export class StartDataButtonComponent {
