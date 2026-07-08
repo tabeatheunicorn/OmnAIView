@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogContent } from '@angular/material/dialog';
 /**
@@ -8,6 +8,7 @@ import { MatDialogContent } from '@angular/material/dialog';
     selector: 'app-download-progress',
     imports: [MatProgressSpinnerModule, MatDialogContent],
     styleUrls: ['./downloadProgress.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
     <mat-dialog-content class="center-content">
       <p>Saving file ...</p>

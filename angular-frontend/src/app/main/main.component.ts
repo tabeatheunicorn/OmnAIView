@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { GraphComponent } from "../graph/graph.component";
 import { ToolbarComponent } from "../toolbar/toolbar.component";
 import { SideBarComponent } from "../sidebar/sidebar.component";
@@ -10,6 +10,7 @@ import { SideBarComponent } from "../sidebar/sidebar.component";
     selector: 'app-main',
     templateUrl: './main.component.html',
     styleUrl: './main.component.css',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [GraphComponent, ToolbarComponent, SideBarComponent]
 })
 export class mainComponent {

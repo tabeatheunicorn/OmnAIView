@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   MatDialogContent,
@@ -14,6 +14,7 @@ import { MatIcon } from '@angular/material/icon';
   selector: 'app-save-data-locally-modal',
   imports: [MatDialogContent, MatDialogTitle, MatDialogModule, MatButtonModule, MatInputModule, FormsModule, MatIcon],
   templateUrl: './save-data-locally-modal.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './save-data-locally-modal.component.css'
 })
 export class SaveDataLocallyModalComponent {

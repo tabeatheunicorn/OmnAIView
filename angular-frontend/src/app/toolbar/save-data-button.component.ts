@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
 import { DataSourceSelectionService } from "../source-selection/data-source-selection.service";
@@ -14,6 +14,7 @@ import { MatIconButton } from '@angular/material/button';
         <mat-icon>save</mat-icon>
         </button>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './toolbar.component.css'
 })
 export class SaveDataButtonComponent {

@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialog } from '@angular/material/dialog';
@@ -9,6 +9,7 @@ import { SettingsDialogComponent } from "../settings/settings-dialog.component";
     standalone: true,
     imports: [MatIcon, MatButtonModule],
     templateUrl: './settings-button.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./toolbar.component.css']
 })
 export class SettingsMenuComponent {

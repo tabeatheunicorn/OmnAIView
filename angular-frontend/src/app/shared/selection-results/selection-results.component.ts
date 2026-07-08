@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { SelectionAnalysisService, SelectionAnalysisResult } from '../selection-analysis.service';
 import { OmnAIScopeDataService } from '../../omnai-datasource/omnai-scope-server/live-data.service';
 import { CommonModule } from '@angular/common';
@@ -88,6 +88,7 @@ interface TimeRange {
       }
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./selection-results.component.css']
 })
 export class SelectionResultsComponent {

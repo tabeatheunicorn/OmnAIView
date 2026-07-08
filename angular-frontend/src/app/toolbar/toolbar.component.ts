@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { AdvancedModeService } from '../advanced-mode/advanced-mode.service';
 import { StartDataButtonComponent } from "../toolbar/start-data-button.component";
 import { SaveDataButtonComponent } from '../toolbar/save-data-button.component';
@@ -11,6 +11,7 @@ import { RecordDataButtonComponent } from './record-data-button.component';
     selector: 'app-toolbar',
     templateUrl: './toolbar.component.html',
     styleUrl: './toolbar.component.css',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [StartDataButtonComponent, SaveDataButtonComponent, SettingsMenuComponent, MatSlideToggle, RecordDataButtonComponent]
 })
 export class ToolbarComponent {

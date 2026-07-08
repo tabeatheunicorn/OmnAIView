@@ -1,4 +1,4 @@
-import { Component, signal, inject } from "@angular/core";
+import { Component, signal, inject, ChangeDetectionStrategy } from "@angular/core";
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconButton } from "@angular/material/button";
@@ -11,6 +11,7 @@ import { SideBarService } from "./sidebar.service";
     selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
     styleUrl: './sidebar.component.css',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [DevicesList, MatSidenavModule, MatIconButton, MatIcon]
 })
 export class SideBarComponent {
