@@ -1,5 +1,5 @@
 import { Component, signal, inject } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
@@ -11,7 +11,7 @@ import { SideBarService } from "./sidebar.service";
     selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
     styleUrl: './sidebar.component.css',
-    imports: [DevicesList, MatSidenavModule, MatIconButton, MatIcon, CommonModule]
+    imports: [DevicesList, MatSidenavModule, MatIconButton, MatIcon]
 })
 export class SideBarComponent {
     readonly sideBarService = inject(SideBarService)
