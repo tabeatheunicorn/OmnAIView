@@ -5,16 +5,15 @@ import { MatDialogRef } from '@angular/material/dialog';
 describe('SaveDataLocallyModalComponent', () => {
   let component: SaveDataLocallyModalComponent;
   let fixture: ComponentFixture<SaveDataLocallyModalComponent>;
-  const dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
-  
+  const dialogRefSpy = {
+    close: vi.fn().mockName('MatDialogRef.close'),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SaveDataLocallyModalComponent],
-      providers: [
-        { provide: MatDialogRef, useValue: dialogRefSpy }
-      ]
-    })
-      .compileComponents();
+      providers: [{ provide: MatDialogRef, useValue: dialogRefSpy }],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SaveDataLocallyModalComponent);
     component = fixture.componentInstance;
